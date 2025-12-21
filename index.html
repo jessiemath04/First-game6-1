@@ -1,0 +1,1606 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Jessie Math - 除法應用</title>
+
+  <!-- 字體 / Icon -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    :root{
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --shadow:0 14px 40px rgba(15,23,42,.12);
+      --radius:20px;
+      --brand:#5f73ff;
+      --brand2:#f7b3c2;
+      --accent:#FFD700;
+      --good:#16a34a;
+      --bad:#dc2626;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'Noto Sans TC', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left,#e0e7ff 0,transparent 55%),
+        radial-gradient(circle at bottom right,#ffe4f0 0,transparent 55%),
+        var(--bg);
+      color:var(--ink);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      padding:16px;
+    }
+    .page{
+      width:100%;
+      max-width:1100px;
+      background:rgba(255,255,255,0.96);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:14px 14px 20px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    /* Topbar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:6px 8px 10px;
+      border-bottom:1px solid rgba(148,163,184,.35);
+      gap:10px;
+    }
+    .brand-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .logo-circle{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      background:#ffeaa7;
+      background-image:url("JESSIEMATH-Q.png");
+      background-size:cover;
+      background-position:center;
+      box-shadow:0 0 0 3px rgba(255,215,0,.85);
+      flex-shrink:0;
+    }
+    .brand-text-main{
+      font-family:'Fredoka';
+      font-weight:800;
+      letter-spacing:.03em;
+      font-size:1.3rem;
+      line-height:1.1;
+      display:flex;
+      flex-direction:column;
+    }
+    .brand-text-main span.en{
+      text-transform:uppercase;
+    }
+    .brand-text-main span.tw{
+      font-family:'Noto Sans TC';
+      font-size:.8rem;
+      font-weight:700;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(248,250,252,.95);
+      font-size:.78rem;
+      color:var(--muted);
+      text-decoration:none;
+      transition:.18s ease;
+      backdrop-filter:blur(8px);
+    }
+    .nav-btn i{font-size:.8rem;}
+    .nav-btn:hover{
+      border-color:var(--brand);
+      color:var(--ink);
+      box-shadow:0 6px 18px rgba(15,23,42,.15);
+      transform:translateY(-1px);
+      background:#fff;
+    }
+
+    /* Screen 切換 */
+    .screens{
+      margin-top:8px;
+      min-height:420px;
+    }
+    .screen{
+      display:none;
+      animation:fadeIn .25s ease;
+    }
+    .screen.active{
+      display:block;
+    }
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(4px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    /* 共用卡片樣式 */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      box-shadow:0 12px 32px rgba(15,23,42,.08);
+      padding:16px 16px 18px;
+    }
+    .card-title{
+      font-family:'Fredoka';
+      font-size:1.2rem;
+      margin-bottom:6px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .card-title span.sub{
+      font-family:'Noto Sans TC';
+      font-size:.9rem;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 10px;
+      font-size:.78rem;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4f46e5;
+      border:1px solid #c7d2fe;
+      margin-bottom:6px;
+    }
+    .tag .pill{
+      background:#4f46e5;
+      color:#fff;
+      padding:1px 8px;
+      border-radius:999px;
+      font-size:.7rem;
+      font-weight:700;
+    }
+    .desc{
+      font-size:.85rem;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:10px;
+    }
+    .bullet-list{
+      list-style:none;
+      font-size:.82rem;
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin:6px 0 10px;
+    }
+    .bullet-list li::before{
+      content:"✦";
+      margin-right:6px;
+      color:#fb7185;
+      font-size:.7rem;
+    }
+
+    .field-label{
+      font-size:.8rem;
+      font-weight:600;
+      margin-bottom:4px;
+      color:#111827;
+    }
+    .name-input{
+      width:100%;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.9);
+      font-size:.9rem;
+      outline:none;
+    }
+    .name-input:focus{
+      border-color:var(--brand);
+      box-shadow:0 0 0 1px rgba(95,115,255,.4);
+    }
+    .hint-text{
+      font-size:.8rem;
+      color:#b91c1c;
+      margin-top:4px;
+      min-height:1.1em;
+    }
+
+    .primary-btn{
+      margin-top:12px;
+      width:100%;
+      padding:9px 10px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg,#4f46e5,#f97316);
+      color:#fff;
+      font-size:.9rem;
+      font-weight:700;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      box-shadow:0 12px 32px rgba(59,130,246,.55);
+    }
+    .primary-btn:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 16px rgba(59,130,246,.6);
+    }
+    .primary-btn:disabled{
+      opacity:.4;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    /* 主選單 */
+    .menu-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 3fr) minmax(0, 2fr);
+      gap:14px;
+    }
+    @media(max-width:900px){
+      .menu-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+
+    .menu-section-title{
+      font-size:.86rem;
+      font-weight:700;
+      margin-bottom:6px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .menu-section-title i{color:#4f46e5;}
+
+    .level-bar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .level-btn{
+      flex:1 1 120px;
+      padding:8px 10px;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.6);
+      background:#f9fafb;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      cursor:pointer;
+      transition:.16s ease;
+      text-align:left;
+    }
+    .level-btn span.lid{
+      font-size:.72rem;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .level-btn span.lname{
+      font-size:.86rem;
+      font-weight:700;
+    }
+    .level-btn span.lhint{
+      font-size:.72rem;
+      color:var(--muted);
+    }
+    .level-btn.active{
+      border-color:var(--brand);
+      background:linear-gradient(135deg,#eef2ff,#fef3c7);
+      box-shadow:0 8px 22px rgba(79,70,229,.25);
+      transform:translateY(-1px);
+    }
+
+    .chip-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .chip-btn{
+      font-size:.8rem;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.8);
+      background:#f9fafb;
+      color:var(--muted);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:.16s ease;
+    }
+    .chip-btn i{
+      font-size:.75rem;
+    }
+    .chip-btn.active{
+      border-color:var(--brand);
+      background:#4f46e5;
+      color:#e5e7eb;
+      box-shadow:0 8px 22px rgba(79,70,229,.45);
+    }
+
+    .menu-summary{
+      font-size:.82rem;
+      color:var(--muted);
+      margin-top:8px;
+      line-height:1.5;
+    }
+    .menu-summary b{color:#111827;}
+
+    /* 排行 / 玩家資訊 */
+    .player-box{
+      font-size:.82rem;
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:14px;
+      background:#f9fafb;
+      border:1px dashed rgba(148,163,184,.8);
+      margin-bottom:10px;
+    }
+    .player-box b{
+      color:#111827;
+    }
+    .rank-list{
+      list-style:none;
+      font-size:.8rem;
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .rank-list li{
+      display:flex;
+      justify-content:space-between;
+    }
+
+    /* 遊戲頁 */
+    .game-header{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      align-items:flex-end;
+    }
+    .game-title-block{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .game-level-line{
+      font-size:.9rem;
+      font-weight:700;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      align-items:center;
+    }
+    .lvl-pill{
+      font-size:.75rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #c7d2fe;
+      color:#4f46e5;
+    }
+    .diff-pill{
+      font-size:.7rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#ecfeff;
+      border:1px solid #67e8f9;
+      color:#0e7490;
+    }
+    .speed-pill{
+      font-size:.7rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#fef9c3;
+      border:1px solid #facc15;
+      color:#92400e;
+    }
+
+    .game-stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      font-size:.82rem;
+    }
+    .stat-chip{
+      padding:4px 10px;
+      border-radius:999px;
+      background:#0f172a;
+      color:#e5e7eb;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      box-shadow:0 8px 20px rgba(15,23,42,.65);
+    }
+    .stat-chip span.label{
+      color:#9ca3af;
+      font-size:.72rem;
+    }
+    .stat-chip span.value{
+      font-family:'Fredoka';
+      font-weight:700;
+    }
+    .stat-chip.timer span.value{
+      color:#f97373;
+    }
+    .stat-chip.score span.value{
+      color:#4ade80;
+    }
+
+    .game-top-buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .top-btn{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.9);
+      background:#f9fafb;
+      padding:6px 10px;
+      font-size:.78rem;
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      transition:.14s ease;
+    }
+    .top-btn:hover{
+      border-color:var(--brand);
+      color:var(--ink);
+      background:#fff;
+      box-shadow:0 6px 18px rgba(148,163,184,.7);
+      transform:translateY(-1px);
+    }
+
+    /* 題目卡 */
+    .question-card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:14px 14px 16px;
+      border:1px solid var(--line);
+      box-shadow:0 10px 26px rgba(15,23,42,.08);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .question-label{
+      font-size:.8rem;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .question-label span.q-tag{
+      font-size:.72rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background:rgba(37,99,235,.08);
+      color:#1d4ed8;
+      border:1px solid rgba(59,130,246,.4);
+    }
+
+    .story-row{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      font-size:.8rem;
+      color:var(--muted);
+      background:#f9fafb;
+      border-radius:14px;
+      padding:6px 8px;
+      border:1px dashed rgba(148,163,184,.5);
+    }
+    .story-icon{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#eef2ff;
+      color:#4f46e5;
+      flex-shrink:0;
+      font-size:.9rem;
+    }
+
+    .question-main{
+      font-family:'Fredoka';
+      font-size:1.5rem;
+      text-align:center;
+      padding:6px 8px 2px;
+    }
+    .expr-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:14px;
+      background:#f9fafb;
+      border:1px dashed rgba(148,163,184,.7);
+      min-width:190px;
+      justify-content:center;
+    }
+    .expr-tag span.eq{
+      font-weight:700;
+      letter-spacing:.03em;
+    }
+    .expr-tag span.small{
+      font-size:.8rem;
+      color:var(--muted);
+      font-family:'Noto Sans TC';
+    }
+
+    .viz-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .stock-bar-wrap{
+      flex:1 1 160px;
+    }
+    .stock-label{
+      display:flex;
+      justify-content:space-between;
+      font-size:.76rem;
+      margin-bottom:3px;
+    }
+    .stock-bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:#e5e7eb;
+      overflow:hidden;
+    }
+    .stock-fill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#4f46e5,#f97316);
+      transition:width .25s ease;
+    }
+    .mini-note{
+      flex:1 1 120px;
+      text-align:right;
+    }
+
+    .control-card{
+      margin-top:6px;
+      padding:8px 10px;
+      border-radius:16px;
+      background:#f9fafb;
+      border:1px solid rgba(209,213,219,.9);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .control-title{
+      font-size:.82rem;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      color:#111827;
+    }
+    .control-title i{color:#0ea5e9;}
+    .guess-row{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:2px;
+    }
+    .guess-label{
+      font-size:.8rem;
+      color:var(--muted);
+    }
+    .guess-box{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:4px 7px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.9);
+      background:#fff;
+    }
+    .guess-btn{
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      border:none;
+      background:#e5e7eb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:.85rem;
+      color:#4b5563;
+    }
+    .guess-btn:active{transform:translateY(1px);}
+    .guess-input{
+      width:70px;
+      border:none;
+      outline:none;
+      text-align:center;
+      font-family:'Fredoka';
+      font-size:1rem;
+      font-weight:700;
+      background:transparent;
+      color:#111827;
+    }
+    .guess-input::placeholder{
+      color:#cbd5f5;
+      font-weight:400;
+    }
+    .action-row{
+      display:flex;
+      justify-content:flex-start;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .primary-action{
+      padding:7px 12px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg,#4f46e5,#f97316);
+      color:#fff;
+      font-size:.86rem;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      cursor:pointer;
+      box-shadow:0 8px 22px rgba(79,70,229,.45);
+    }
+    .primary-action:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 18px rgba(79,70,229,.5);
+    }
+    .ghost-btn{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.8);
+      background:transparent;
+      padding:6px 10px;
+      font-size:.8rem;
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      transition:.14s ease;
+    }
+    .ghost-btn:hover{
+      border-color:var(--brand);
+      color:var(--ink);
+      background:#fff;
+      box-shadow:0 6px 18px rgba(148,163,184,.7);
+      transform:translateY(-1px);
+    }
+
+    .feedback{
+      margin-top:4px;
+      font-size:.86rem;
+      min-height:1.2em;
+    }
+    .feedback span.good{color:var(--good);font-weight:700;}
+    .feedback span.bad{color:var(--bad);font-weight:700;}
+    .timeup{
+      font-size:.82rem;
+      margin-top:3px;
+      color:#b91c1c;
+      min-height:1rem;
+    }
+
+    @media (max-width:640px){
+      .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .nav-links{
+        justify-content:flex-start;
+      }
+      .page{
+        padding:10px;
+        border-radius:20px;
+      }
+      .game-header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .guess-row{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand-left">
+        <div class="logo-circle"></div>
+        <div class="brand-text-main">
+          <span class="en">Jessie Math</span>
+          <span class="tw">捷析老師 - 除法</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a class="nav-btn" href="https://jessiemath0703-chu.github.io/website2/" target="_blank">
+          <i class="fa-solid fa-house"></i><span>首頁</span>
+        </a>
+        <a class="nav-btn" href="https://jessiemath0703-chu.github.io/Game-Lobby/" target="_blank">
+          <i class="fa-solid fa-gamepad"></i><span>遊戲大廳</span>
+        </a>
+        <a class="nav-btn" href="https://jessiemath0703-chu.github.io/Game-Lobby/#g4-u6" target="_blank">
+          <i class="fa-solid fa-rotate-left"></i><span>四年級除法</span>
+        </a>
+      </nav>
+    </header>
+
+    <main class="screens">
+      <!-- Screen 1：輸入名字 + 說明 -->
+      <section class="screen active" id="screen-welcome">
+        <div class="card">
+          <div class="tag">
+            <span class="pill">STEP 1</span>
+            <span>登入暱稱 ＋ 看規則</span>
+          </div>
+          <div class="card-title">
+            <span>除法四連戰，準備上場！</span>
+          </div>
+          <p class="desc">
+            這個遊戲會幫你練習：四位數除一位數、二位數除二位數、三位數除二位數，還有跟 10、100、1000 有關的位值移動。
+            先留下你的暱稱，我們會幫你記錄分數與 combo！
+          </p>
+          <ul class="bullet-list">
+            <li>每一關都有倒數計時，時間到了就結束本局。</li>
+            <li>答對會加分，答錯會扣分（不會扣到 0 以下）。</li>
+            <li>連續答對會累積 combo，可以當成自己的小紀錄。</li>
+            <li>在下一頁可以選關卡、選「難度」和「速度」。</li>
+          </ul>
+
+          <label class="field-label" for="welcomeNameInput">玩家暱稱（必填）</label>
+          <input id="welcomeNameInput" class="name-input" placeholder="例如：Jessie、小圓餅、除法之神..." />
+          <div class="hint-text" id="welcomeHint"></div>
+
+          <button class="primary-btn" id="goMenuBtn">
+            <span>前往主選單</span>
+            <i class="fa-solid fa-arrow-right-long"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Screen 2：主選單（關卡＋難度＋速度） -->
+      <section class="screen" id="screen-menu">
+        <div class="menu-grid">
+          <div class="card">
+            <div class="tag">
+              <span class="pill">STEP 2</span>
+              <span>選關卡 ＋ 難度 ＋ 速度</span>
+            </div>
+            <div class="card-title">
+              <span>選擇關卡</span>
+              <span class="sub">6-1～6-4 都可以自由挑戰</span>
+            </div>
+            <p class="player-box">
+              玩家：<b id="menuPlayerName">未命名玩家</b><br>
+              建議先從 6-1 開始，熟悉回復性除法，再挑戰估商與長除。
+            </p>
+
+            <div>
+              <div class="menu-section-title">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>關卡選擇</span>
+              </div>
+              <div class="level-bar">
+                <button class="level-btn active" data-level="1">
+                  <span class="lid">6-1</span>
+                  <span class="lname">貨櫃分裝站</span>
+                  <span class="lhint">四位數 ÷ 一位數 · 回復性除法</span>
+                </button>
+                <button class="level-btn" data-level="2">
+                  <span class="lid">6-2</span>
+                  <span class="lname">估商砲台</span>
+                  <span class="lhint">二位數 ÷ 二位數 · 先抓大約幾倍</span>
+                </button>
+                <button class="level-btn" data-level="3">
+                  <span class="lid">6-3</span>
+                  <span class="lname">長除大樓</span>
+                  <span class="lhint">三位數 ÷ 二位數 · 百十個一起動</span>
+                </button>
+                <button class="level-btn" data-level="4">
+                  <span class="lid">6-4</span>
+                  <span class="lname">0 的移動工廠</span>
+                  <span class="lhint">10、100、1000 的除法 · 位值移動</span>
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;">
+              <div class="menu-section-title">
+                <i class="fa-solid fa-fire"></i>
+                <span>難度</span>
+              </div>
+              <div class="chip-row" id="diffChips">
+                <button class="chip-btn active" data-diff="easy">
+                  <i class="fa-solid fa-face-smile"></i> 新手暖身（加分較少，扣分也少）
+                </button>
+                <button class="chip-btn" data-diff="normal">
+                  <i class="fa-solid fa-face-grin-stars"></i> 標準挑戰（加 10，扣 5）
+                </button>
+                <button class="chip-btn" data-diff="hard">
+                  <i class="fa-solid fa-skull-crossbones"></i> 硬派高手（加分多，扣分也多）
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;">
+              <div class="menu-section-title">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>速度</span>
+              </div>
+              <div class="chip-row" id="speedChips">
+                <button class="chip-btn active" data-speed="slow">
+                  <i class="fa-solid fa-feather-pointed"></i> 慢速（120 秒）
+                </button>
+                <button class="chip-btn" data-speed="normal">
+                  <i class="fa-solid fa-bolt"></i> 一般（90 秒）
+                </button>
+                <button class="chip-btn" data-speed="fast">
+                  <i class="fa-solid fa-rocket"></i> 极速（60 秒）
+                </button>
+              </div>
+            </div>
+
+            <p class="menu-summary" id="menuSummary">
+              目前選擇：<br>
+              關卡：<b>6-1 貨櫃分裝站</b> ｜ 難度：<b>新手暖身</b> ｜ 速度：<b>慢速 120 秒</b>
+            </p>
+
+            <button class="primary-btn" id="startPlayBtn">
+              <span>開始遊戲</span>
+              <i class="fa-solid fa-play"></i>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <span>小小排行榜（本次遊戲紀錄）</span>
+            </div>
+            <ul class="rank-list" id="rankList">
+              <li><span>暫無紀錄</span><span>—</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Screen 3：遊戲頁 -->
+      <section class="screen" id="screen-game">
+        <div class="card">
+          <div class="game-header">
+            <div class="game-title-block">
+              <div class="game-level-line">
+                <span id="gameLevelTitle">6-1 貨櫃分裝站</span>
+                <span class="lvl-pill" id="gameLevelTag">四位數 ÷ 一位數</span>
+                <span class="diff-pill" id="gameDiffTag">新手</span>
+                <span class="speed-pill" id="gameSpeedTag">慢速</span>
+              </div>
+              <div style="font-size:.8rem;color:var(--muted);">
+                玩家：<b id="gamePlayerName">未命名玩家</b>
+              </div>
+            </div>
+
+            <div class="game-stats">
+              <div class="stat-chip timer">
+                <span class="label">TIME</span>
+                <span class="value" id="gameTimerText">90 s</span>
+              </div>
+              <div class="stat-chip score">
+                <span class="label">SCORE</span>
+                <span class="value" id="gameScoreText">0</span>
+              </div>
+              <div class="stat-chip">
+                <span class="label">COMBO</span>
+                <span class="value" id="gameStreakText">0 ✦</span>
+              </div>
+              <div class="game-top-buttons">
+                <button class="top-btn" id="pauseBtn">
+                  <i class="fa-solid fa-pause"></i> 暫停
+                </button>
+                <button class="top-btn" id="retryTopBtn">
+                  <i class="fa-solid fa-rotate-right"></i> 重來本關
+                </button>
+                <button class="top-btn" id="backMenuBtn">
+                  <i class="fa-solid fa-house-chimney"></i> 回主選單
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-card">
+            <div class="question-label">
+              <span class="q-tag" id="qLevelLabel">6-1 關卡題目</span>
+              <span id="qShortDesc">幫倉庫把貨物平均分給每一台車。</span>
+            </div>
+
+            <div class="story-row">
+              <div class="story-icon" id="storyIcon"><i class="fa-solid fa-truck"></i></div>
+              <div id="storyText">
+                今天倉庫要出貨，總共有 2,592 箱，要分給 6 台貨車。你要決定「每台貨車要裝幾箱」才會剛剛好不剩貨。
+              </div>
+            </div>
+
+            <div class="question-main">
+              <div class="expr-tag">
+                <span class="small" id="exprLabel">出貨任務：</span>
+                <span class="eq" id="exprMain">2592 ÷ 6 = ?</span>
+              </div>
+            </div>
+
+            <div class="viz-row">
+              <div class="stock-bar-wrap">
+                <div class="stock-label">
+                  <span id="stockTitle">倉庫貨物（還沒分掉）</span>
+                  <span id="stockText">2592 單位</span>
+                </div>
+                <div class="stock-bar">
+                  <div class="stock-fill" id="stockFill"></div>
+                </div>
+              </div>
+              <div class="mini-note" id="miniNote">
+                每一次你改變商數，就等於在重新規劃「每台車要裝幾箱」。
+              </div>
+            </div>
+
+            <div class="control-card">
+              <div class="control-title">
+                <i class="fa-solid fa-sliders"></i>
+                <span id="controlTitle">設定每一台貨車要拿幾箱：</span>
+              </div>
+              <div class="guess-row">
+                <span class="guess-label" id="guessLabel">我猜每一台貨車可以拿：</span>
+                <div class="guess-box">
+                  <button class="guess-btn" id="minusBtn">-</button>
+                  <input id="guessInput" class="guess-input" type="number" placeholder="？" />
+                  <button class="guess-btn" id="plusBtn">+</button>
+                </div>
+                <span class="guess-label" id="guessUnit">箱 / 每台車</span>
+              </div>
+              <div class="action-row">
+                <button class="primary-action" id="checkBtn">
+                  <span id="actionText">分貨出車！</span>
+                  <i class="fa-solid fa-truck-fast"></i>
+                </button>
+                <button class="ghost-btn" id="nextBtn">
+                  <i class="fa-solid fa-shuffle"></i> 下一題
+                </button>
+              </div>
+            </div>
+
+            <div class="feedback" id="feedbackBox"></div>
+            <div class="timeup" id="timeupText"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ---- 關卡設定 ----
+    const levelMeta = {
+      1:{
+        id:"6-1",
+        title:"6-1 貨櫃分裝站",
+        tag:"四位數 ÷ 一位數",
+        shortDesc:"幫倉庫把貨物平均分給每一台車。",
+        storyIcon:"fa-truck",
+        storyPrefix:"今天倉庫要出貨，總共有 <b>{a}</b> 箱，要分給 <b>{b}</b> 台貨車。你要決定「每台貨車要裝幾箱」才會剛剛好不剩貨。",
+        exprLabel:"出貨任務：",
+        stockTitle:"倉庫貨物（還沒分掉）",
+        miniNote:"如果每台車拿太少，倉庫會剩貨；拿太多就會爆倉，這就是回復性除法的感覺。",
+        controlTitle:"設定每一台貨車要拿幾箱：",
+        guessLabel:"我猜每一台貨車可以拿：",
+        guessUnit:"箱 / 每台車",
+        actionText:"分貨出車！"
+      },
+      2:{
+        id:"6-2",
+        title:"6-2 估商砲台",
+        tag:"二位數 ÷ 二位數",
+        shortDesc:"調整砲台倍率，讓估商砲一發命中目標。",
+        storyIcon:"fa-bullseye",
+        storyPrefix:"前線補給需要 <b>{a}</b> 份物資，一次出動 <b>{b}</b> 台運輸機。你要估計：每台大約要送幾份，才能剛好補給完。",
+        exprLabel:"估商任務：",
+        stockTitle:"需要補給的總份數",
+        miniNote:"先想「{a} 大約是幾十」、「{b} 大約是幾十」，估出差不多幾倍，再回來精準調整。",
+        controlTitle:"調整估商砲的倍數：",
+        guessLabel:"我估計商數大約是：",
+        guessUnit:"倍",
+        actionText:"發射估商砲！"
+      },
+      3:{
+        id:"6-3",
+        title:"6-3 長除大樓",
+        tag:"三位數 ÷ 二位數",
+        shortDesc:"幫三層大樓安排住戶，每層都要平均分配。",
+        storyIcon:"fa-building",
+        storyPrefix:"有一棟三層大樓要住進 <b>{a}</b> 位居民，每一層代表把人分成 <b>{b}</b> 組。你要決定每組可以住幾個人，才會剛剛好住滿。",
+        exprLabel:"長除任務：",
+        stockTitle:"還沒安置好的居民數",
+        miniNote:"長除法就是從百位開始分，再到十位、個位，像一層一層安排大樓住戶。",
+        controlTitle:"推測整體的商數（每組幾人）：",
+        guessLabel:"我猜每一組可以住：",
+        guessUnit:"人",
+        actionText:"檢查長除配置！"
+      },
+      4:{
+        id:"6-4",
+        title:"6-4 0 的移動工廠",
+        tag:"10、100、1000 的除法",
+        shortDesc:"啟動 0 回收機，觀察位值怎麼移動。",
+        storyIcon:"fa-recycle",
+        storyPrefix:"工廠產生了 <b>{a}</b> 個零件，要打包成 <b>{b}</b> 組。每組可以有幾個零件？這關重點是看<b>0 的個數</b>和位值移動。",
+        exprLabel:"0 回收任務：",
+        stockTitle:"原本的零件數（含很多 0）",
+        miniNote:"除以 10、100、1000，可以想成：『把被除數後面的 0 拿掉幾個』，或『小數點往左移幾格』。",
+        controlTitle:"觀察 0 並輸入最後的商數：",
+        guessLabel:"我認為商數是：",
+        guessUnit:"（消掉 0 之後的數）",
+        actionText:"啟動 0 回收機！"
+      }
+    };
+
+    // ---- 狀態 ----
+    let playerName = "";
+    let currentLevel = 1;
+    let difficulty = "easy";   // easy / normal / hard
+    let speed = "slow";        // slow / normal / fast
+
+    let currentQuestion = null;
+    let correctAnswer = null;
+    let score = 0;
+    let streak = 0;
+    let timer = 90;
+    let timerId = null;
+    let gameActive = false;
+    let paused = false;
+    const lastQuestion = {1:null,2:null,3:null,4:null};
+
+    const rankRecords = []; // {name, levelId, score}
+
+    // ---- DOM ----
+    const screenWelcome = document.getElementById("screen-welcome");
+    const screenMenu = document.getElementById("screen-menu");
+    const screenGame = document.getElementById("screen-game");
+
+    const welcomeNameInput = document.getElementById("welcomeNameInput");
+    const welcomeHint = document.getElementById("welcomeHint");
+    const goMenuBtn = document.getElementById("goMenuBtn");
+
+    const menuPlayerName = document.getElementById("menuPlayerName");
+    const menuSummary = document.getElementById("menuSummary");
+    const levelButtons = document.querySelectorAll(".level-btn");
+    const diffChips = document.querySelectorAll("#diffChips .chip-btn");
+    const speedChips = document.querySelectorAll("#speedChips .chip-btn");
+    const startPlayBtn = document.getElementById("startPlayBtn");
+    const rankList = document.getElementById("rankList");
+
+    const gamePlayerName = document.getElementById("gamePlayerName");
+    const gameLevelTitle = document.getElementById("gameLevelTitle");
+    const gameLevelTag = document.getElementById("gameLevelTag");
+    const gameDiffTag = document.getElementById("gameDiffTag");
+    const gameSpeedTag = document.getElementById("gameSpeedTag");
+    const gameTimerText = document.getElementById("gameTimerText");
+    const gameScoreText = document.getElementById("gameScoreText");
+    const gameStreakText = document.getElementById("gameStreakText");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const retryTopBtn = document.getElementById("retryTopBtn");
+    const backMenuBtn = document.getElementById("backMenuBtn");
+
+    const qLevelLabel = document.getElementById("qLevelLabel");
+    const qShortDesc = document.getElementById("qShortDesc");
+    const storyIcon = document.getElementById("storyIcon");
+    const storyText = document.getElementById("storyText");
+    const exprLabel = document.getElementById("exprLabel");
+    const exprMain = document.getElementById("exprMain");
+    const stockTitle = document.getElementById("stockTitle");
+    const stockText = document.getElementById("stockText");
+    const stockFill = document.getElementById("stockFill");
+    const miniNote = document.getElementById("miniNote");
+
+    const controlTitle = document.getElementById("controlTitle");
+    const guessLabel = document.getElementById("guessLabel");
+    const guessUnit = document.getElementById("guessUnit");
+    const actionText = document.getElementById("actionText");
+
+    const guessInput = document.getElementById("guessInput");
+    const minusBtn = document.getElementById("minusBtn");
+    const plusBtn = document.getElementById("plusBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const timeupText = document.getElementById("timeupText");
+
+    // ---- Helper ----
+    function showScreen(name){
+      screenWelcome.classList.remove("active");
+      screenMenu.classList.remove("active");
+      screenGame.classList.remove("active");
+      if(name === "welcome") screenWelcome.classList.add("active");
+      if(name === "menu") screenMenu.classList.add("active");
+      if(name === "game") screenGame.classList.add("active");
+    }
+
+    function randInt(min,max){
+      return Math.floor(Math.random()*(max-min+1))+min;
+    }
+
+    // 6-1：四位數 ÷ 一位數，整除
+    function genLevel1(){
+      const d = randInt(2,9); // 除數 2~9
+      let qMin = Math.ceil(1000/d);
+      let qMax = Math.floor(9999/d);
+      if(qMin < 20) qMin = 20;
+      if(qMax > 999) qMax = 999;
+      const q = randInt(qMin,qMax);
+      return {a: d*q, b: d};
+    }
+
+    // 6-2：二位數 ÷ 二位數（商 2~9）
+    function genLevel2(){
+      while(true){
+        const d = randInt(11,19);
+        const q = randInt(2,9);
+        const a = d*q;
+        if(a >= 20 && a <= 99){
+          return {a:a, b:d};
+        }
+      }
+    }
+
+    // 6-3：三位數 ÷ 二位數
+    function genLevel3(){
+      while(true){
+        const d = randInt(12,29);
+        const q = randInt(4,25);
+        const a = d*q;
+        if(a >= 100 && a <= 999){
+          return {a:a, b:d};
+        }
+      }
+    }
+
+    // 6-4：多個 0 的除法（10,100,1000）
+    function genLevel4(){
+      const base = randInt(12,97);
+      const zerosA = randInt(1,3);
+      const zerosB = randInt(1,zerosA);
+      const a = base * Math.pow(10,zerosA);
+      const b = Math.pow(10,zerosB);
+      return {a:a, b:b};
+    }
+
+    function generateQuestionForLevel(level){
+      if(level===1) return genLevel1();
+      if(level===2) return genLevel2();
+      if(level===3) return genLevel3();
+      return genLevel4();
+    }
+
+    function randomQuestion(){
+      let q;
+      let tries = 0;
+      const last = lastQuestion[currentLevel];
+      do{
+        q = generateQuestionForLevel(currentLevel);
+        tries++;
+      }while(last && q.a===last.a && q.b===last.b && tries < 5);
+      lastQuestion[currentLevel] = q;
+      return q;
+    }
+
+    function getBaseTime(){
+      if(speed === "slow") return 120;
+      if(speed === "normal") return 90;
+      return 60;
+    }
+
+    function diffLabel(){
+      if(difficulty==="easy") return "新手";
+      if(difficulty==="normal") return "標準";
+      return "高手";
+    }
+    function speedLabel(){
+      if(speed==="slow") return "慢速";
+      if(speed==="normal") return "一般";
+      return "极速";
+    }
+    function speedSeconds(){
+      if(speed==="slow") return 120;
+      if(speed==="normal") return 90;
+      return 60;
+    }
+
+    function updateMenuSummary(){
+      const meta = levelMeta[currentLevel];
+      const diffText = difficulty==="easy" ? "新手暖身" : (difficulty==="normal" ? "標準挑戰" : "硬派高手");
+      const spText = speed==="slow" ? "慢速 " + speedSeconds() + " 秒" :
+                     speed==="normal" ? "一般 " + speedSeconds() + " 秒" :
+                     "极速 " + speedSeconds() + " 秒";
+      menuSummary.innerHTML =
+        `目前選擇：<br>關卡：<b>${meta.title}</b> ｜ 難度：<b>${diffText}</b> ｜ 速度：<b>${spText}</b>`;
+    }
+
+    function updateGameHeader(){
+      const meta = levelMeta[currentLevel];
+      gamePlayerName.textContent = playerName || "未命名玩家";
+      gameLevelTitle.textContent = meta.title;
+      gameLevelTag.textContent = meta.tag;
+      gameDiffTag.textContent = diffLabel();
+      gameSpeedTag.textContent = speedLabel();
+      gameTimerText.textContent = `${timer} s`;
+      gameScoreText.textContent = score;
+      gameStreakText.textContent = `${streak} ✦`;
+    }
+
+    function resetStatsForLevel(){
+      score = 0;
+      streak = 0;
+      timer = getBaseTime();
+      gameActive = true;
+      paused = false;
+      updateGameHeader();
+      feedbackBox.innerHTML = "";
+      timeupText.textContent = "";
+      pauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i> 暫停`;
+    }
+
+    function startTimer(){
+      if(timerId) clearInterval(timerId);
+      timer = getBaseTime();
+      updateGameHeader();
+      gameActive = true;
+      paused = false;
+      timeupText.textContent = "";
+      timerId = setInterval(()=>{
+        if(!gameActive || paused) return;
+        timer--;
+        if(timer < 0) timer = 0;
+        gameTimerText.textContent = `${timer} s`;
+        if(timer <= 0){
+          gameActive = false;
+          timeupText.textContent = "時間到囉！可以按「重來本關」再挑戰一次。";
+        }
+      },1000);
+    }
+
+    function renderQuestion(){
+      currentQuestion = randomQuestion();
+      const {a,b} = currentQuestion;
+      correctAnswer = a / b;
+
+      const meta = levelMeta[currentLevel];
+
+      qLevelLabel.textContent = `${meta.id} 關卡題目`;
+      qShortDesc.textContent = meta.shortDesc;
+
+      storyIcon.innerHTML = `<i class="fa-solid ${meta.storyIcon}"></i>`;
+      let story = meta.storyPrefix.replace("{a}", a).replace("{b}", b);
+      storyText.innerHTML = story;
+
+      exprLabel.textContent = meta.exprLabel;
+      exprMain.textContent = `${a} ÷ ${b} = ?`;
+
+      stockTitle.textContent = meta.stockTitle;
+      stockText.textContent = `${a} 單位`;
+      stockFill.style.width = "100%";
+
+      miniNote.innerHTML = meta.miniNote.replace("{a}", a).replace("{b}", b);
+
+      controlTitle.textContent = meta.controlTitle;
+      guessLabel.textContent = meta.guessLabel;
+      guessUnit.textContent = meta.guessUnit;
+      actionText.textContent = meta.actionText;
+
+      guessInput.value = "";
+      guessInput.placeholder = "？";
+      feedbackBox.innerHTML = "";
+    }
+
+    function clampGuess(){
+      let val = parseInt(guessInput.value,10);
+      if(isNaN(val)){
+        guessInput.value = "";
+        return;
+      }
+      if(val < 0) val = 0;
+      if(val > 9999) val = 9999;
+      guessInput.value = val;
+    }
+
+    function scoringRule(){
+      if(difficulty === "easy") return {gain:8, penalty:3};
+      if(difficulty === "normal") return {gain:10, penalty:5};
+      return {gain:12, penalty:7};
+    }
+
+    // ⭐ 回傳是否答對：true / false
+    function handleCheck(){
+      if(!gameActive || paused) return false;
+
+      clampGuess();
+      if(guessInput.value === ""){
+        feedbackBox.innerHTML = `<span class="bad">✖ 還沒有輸入商數喔。</span> 先用直覺抓一個數字，再按按鈕看看結果。`;
+        return false;
+      }
+
+      const guess = parseInt(guessInput.value,10);
+      const {a,b} = currentQuestion;
+      const ans = correctAnswer;
+      const {gain, penalty} = scoringRule();
+      let fb = "";
+      let isCorrect = false;
+
+      if(guess === ans){
+        score += gain;
+        streak += 1;
+        isCorrect = true;
+        feedbackBox.innerHTML = `<span class="good">✔ 完美！</span> 你抓到正確商數 <b>${ans}</b> 啦！`;
+        stockFill.style.width = "0%";
+      }else{
+        score = Math.max(0, score - penalty);
+        streak = 0;
+
+        if(currentLevel === 1){
+          const used = guess * b;
+          if(used < a){
+            const left = a - used;
+            fb = `<span class="bad">✖ 還沒分完。</span> 每台只拿 <b>${guess}</b> 箱，<b>總共只分出 ${used} 箱</b>，倉庫還剩 <b>${left}</b> 箱。商數要再大一點～`;
+            const ratio = used / a;
+            stockFill.style.width = `${Math.max(0,(1-ratio))*100}%`;
+          }else if(used > a){
+            const over = used - a;
+            fb = `<span class="bad">✖ 爆倉啦！</span> 如果每台拿 <b>${guess}</b> 箱，<b>需要 ${used} 箱</b>，比倉庫多出 <b>${over}</b> 箱，商數抓太大了。`;
+            stockFill.style.width = "0%";
+          }
+        }else if(currentLevel === 2){
+          const prod = guess * b;
+          if(prod < a){
+            const diff = a - prod;
+            fb = `<span class="bad">✖ 太小囉。</span> 你估的商數是 <b>${guess}</b>，<b>${b} × ${guess} = ${prod}</b>，還差 <b>${diff}</b> 才到 ${a}。可以再把商數調大一些。`;
+          }else{
+            const diff = prod - a;
+            fb = `<span class="bad">✖ 有點太大。</span> 你估的商數是 <b>${guess}</b>，<b>${b} × ${guess} = ${prod}</b>，比 ${a} 多出 <b>${diff}</b>。商數可以往下調。`;
+          }
+        }else if(currentLevel === 3){
+          const prod = guess * b;
+          if(prod < a){
+            fb = `<span class="bad">✖ 商數偏小。</span> 用你猜的商數 <b>${guess}</b>，<b>${b} × ${guess} = ${prod}</b>，還沒填滿 <b>${a}</b>。可以想想百位是不是可以再多放一點。`;
+          }else{
+            fb = `<span class="bad">✖ 商數偏大。</span> 用你猜的商數 <b>${guess}</b>，<b>${b} × ${guess} = ${prod}</b>，已經超過 <b>${a}</b> 了，百位或十位可能放太多。`;
+          }
+        }else{
+          const aStr = String(a);
+          const bStr = String(b);
+          const zeroCountA = aStr.match(/0+$/) ? aStr.match(/0+$/)[0].length : 0;
+          const zeroCountB = bStr.match(/0+$/) ? bStr.match(/0+$/)[0].length : 0;
+          const cancel = Math.min(zeroCountA, zeroCountB);
+
+          fb = `<span class="bad">✖ 還沒抓對。</span> 正確做法是：<br>
+          被除數 <b>${a}</b> 結尾有 <b>${zeroCountA}</b> 個 0，除數 <b>${b}</b> 有 <b>${zeroCountB}</b> 個 0，<br>
+          可以對消 <b>${cancel}</b> 個 0，再做剩下的整數除法。<br>
+          你輸入的是 <b>${guess}</b>，可以再依照「消 0」的想法調整一次。`;
+        }
+
+        if(!fb){
+          fb = `<span class="bad">✖ 再試一次。</span> 這個商數還沒有抓到關鍵，可以再調整看看。`;
+        }
+        feedbackBox.innerHTML = fb;
+      }
+
+      gameScoreText.textContent = score;
+      gameStreakText.textContent = `${streak} ✦`;
+      return isCorrect;
+    }
+
+    function recordRank(){
+      const meta = levelMeta[currentLevel];
+      rankRecords.push({
+        name: playerName || "未命名玩家",
+        levelId: meta.id,
+        score: score
+      });
+      rankRecords.sort((a,b)=>b.score - a.score);
+      if(rankRecords.length > 5) rankRecords.length = 5;
+
+      rankList.innerHTML = "";
+      rankRecords.forEach((r,idx)=>{
+        const li = document.createElement("li");
+        li.innerHTML = `<span>#${idx+1} ${r.name}（${r.levelId}）</span><span>${r.score} 分</span>`;
+        rankList.appendChild(li);
+      });
+    }
+
+    function restartCurrentLevel(){
+      resetStatsForLevel();
+      renderQuestion();
+      updateGameHeader();
+      startTimer();
+    }
+
+    // ---- Event 綁定 ----
+
+    // Step1 -> Step2
+    goMenuBtn.addEventListener("click", ()=>{
+      const name = welcomeNameInput.value.trim();
+      if(!name){
+        welcomeHint.textContent = "請先輸入暱稱，這樣分數才有主人～";
+        return;
+      }
+      playerName = name;
+      welcomeHint.textContent = "";
+      menuPlayerName.textContent = playerName;
+      gamePlayerName.textContent = playerName;
+      showScreen("menu");
+    });
+
+    welcomeNameInput.addEventListener("keydown", e=>{
+      if(e.key === "Enter"){
+        goMenuBtn.click();
+      }
+    });
+
+    // 主選單：關卡選擇
+    levelButtons.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const level = Number(btn.dataset.level);
+        currentLevel = level;
+        levelButtons.forEach(b=>b.classList.toggle("active", b===btn));
+        updateMenuSummary();
+      });
+    });
+
+    // 難度選擇
+    diffChips.forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        diffChips.forEach(c=>c.classList.remove("active"));
+        chip.classList.add("active");
+        difficulty = chip.dataset.diff;
+        updateMenuSummary();
+      });
+    });
+
+    // 速度選擇
+    speedChips.forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        speedChips.forEach(c=>c.classList.remove("active"));
+        chip.classList.add("active");
+        speed = chip.dataset.speed;
+        updateMenuSummary();
+      });
+    });
+
+    // 主選單：開始遊戲
+    startPlayBtn.addEventListener("click", ()=>{
+      resetStatsForLevel();
+      renderQuestion();
+      updateGameHeader();
+      startTimer();
+      showScreen("game");
+    });
+
+    // Game：暫停 / 繼續
+    pauseBtn.addEventListener("click", ()=>{
+      if(!gameActive) return;
+      paused = !paused;
+      if(paused){
+        pauseBtn.innerHTML = `<i class="fa-solid fa-play"></i> 繼續`;
+        timeupText.textContent = "已暫停，按「繼續」再回到戰場。";
+      }else{
+        pauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i> 暫停`;
+        timeupText.textContent = "";
+      }
+    });
+
+    // Game：重來本關
+    retryTopBtn.addEventListener("click", ()=>{
+      restartCurrentLevel();
+    });
+
+    // Game：回主選單
+    backMenuBtn.addEventListener("click", ()=>{
+      gameActive = false;
+      paused = false;
+      if(timerId) clearInterval(timerId);
+      recordRank();
+      updateMenuSummary();
+      showScreen("menu");
+    });
+
+    // Game：輸入 / 遞增遞減
+    minusBtn.addEventListener("click", ()=>{
+      if(guessInput.value === ""){
+        guessInput.value = 0;
+        return;
+      }
+      clampGuess();
+      guessInput.value = Math.max(0, parseInt(guessInput.value,10) - 1);
+    });
+    plusBtn.addEventListener("click", ()=>{
+      if(guessInput.value === ""){
+        guessInput.value = 1;
+        return;
+      }
+      clampGuess();
+      guessInput.value = parseInt(guessInput.value,10) + 1;
+    });
+    guessInput.addEventListener("blur", clampGuess);
+
+    // ⭐ Enter 直接交卷＋（若答對）換下一題
+    guessInput.addEventListener("keydown", e=>{
+      if(e.key === "Enter"){
+        e.preventDefault();
+        const wasCorrect = handleCheck();
+        if(wasCorrect && gameActive && !paused && timer > 0){
+          setTimeout(()=>{ renderQuestion(); }, 400);
+        }
+      }
+    });
+
+    // Game：檢查 / 下一題
+    checkBtn.addEventListener("click", handleCheck);
+    nextBtn.addEventListener("click", ()=>{
+      if(!gameActive){
+        feedbackBox.innerHTML = `<span class="bad">⏰ 時間已結束，請先按「重來本關」再繼續挑戰喔。</span>`;
+        return;
+      }
+      renderQuestion();
+    });
+
+    // 初始化主選單文字
+    updateMenuSummary();
+  </script>
+</body>
+</html>
+
+
+
